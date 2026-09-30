@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav>
+  <span class="brand">🥗 Diet Planner Cloud</span>
+  <div>
+    <a href="profile.html">Profile</a>
+    <a href="generate-plan.html">Generate Plan</a>
+    <a href="saved-plans.html">Saved Plans</a>
+    <a href="files.html">Cloud Files</a>
+    <a href="#" id="logoutLink">Logout</a>
+  </div>
+</nav>
+<div class="container">
+  <div class="card">
+    <h1 id="welcomeMsg">Welcome</h1>
+    <div class="grid-2">
+      <div>
+        <p><strong>Current goal:</strong> <span id="goalVal">-</span></p>
+        <p><strong>Diet preference:</strong> <span id="dietVal">-</span></p>
+      </div>
+      <div>
+        <p><strong>Saved plans:</strong> <span id="planCount">-</span></p>
+        <p><strong>Uploaded files:</strong> <span id="fileCount">-</span></p>
+      </div>
+    </div>
+    <a href="generate-plan.html"><button>Generate New Plan</button></a>
+    <a href="profile.html"><button class="secondary">Edit Profile</button></a>
+  </div>
+
+  <div class="card">
+    <h2>Latest Plan</h2>
+    <div id="latestPlan">Loading...</div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+requireAuthOrRedirect();
+
+async function loadDashboard() {
+  const name = localStorage.getItem("userName") || "there";
+  document.getElementById("welcomeMsg").textContent = `Welcome, ${name}`;
+
+  try {
+    const profile = await apiRequest("/profile");
+    document.getElementById("goalVal").textContent = profile.goal || "Not set";
+    document.getElementById("dietVal").textContent = profile.dietary_preference || "Not set";
+  } catch (e) { /* ignore */ }
+
+  try {
+    const plans = await apiRequest("/plans");
+    document.getElementById("planCount").textContent = plans.length;
+    const latestDiv = document.getElementById("latestPlan");
+    if (plans.length === 0) {
+      latestDiv.innerHTML = "<p>No plans yet. <a href='generate-plan.html'>Generate your first plan</a>.</p>";
+    } else {
+      const p = plans[0];
+      latestDiv.innerHTML = `
+        <div class="meal-item"><span class="meal-label">Breakfast:</span> ${p.breakfast}</div>
+        <div class="meal-item"><span class="meal-label">Lunch:</span> ${p.lunch}</div>
+        <div class="meal-item"><span class="meal-label">Snack:</span> ${p.snack}</div>
+        <div class="meal-item"><span class="meal-label">Dinner:</span> ${p.dinner}</div>
+      `;
+    }
+  } catch (e) { /* ignore */ }
+
+  try {
+    const files = await apiRequest("/files");
+    document.getElementById("fileCount").textContent = files.length;
+  } catch (e) { /* ignore */ }
+}
+loadDashboard();
+
+document.getElementById("logoutLink").addEventListener("click", (e) => {
+  e.preventDefault();
+  clearToken();
+  window.location.href = "login.html";
+});
+</script>
+</body>
+</html>

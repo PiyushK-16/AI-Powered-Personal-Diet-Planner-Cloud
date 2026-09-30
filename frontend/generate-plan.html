@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Generate Diet Plan</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav>
+  <span class="brand">🥗 Diet Planner Cloud</span>
+  <div>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="profile.html">Profile</a>
+    <a href="saved-plans.html">Saved Plans</a>
+    <a href="files.html">Cloud Files</a>
+    <a href="#" id="logoutLink">Logout</a>
+  </div>
+</nav>
+<div class="container">
+  <div class="card">
+    <h1>Generate a New Diet Plan</h1>
+    <p style="color:var(--muted); font-size:0.9rem;">Uses your saved profile by default. You can override for this plan only.</p>
+    <form id="genForm">
+      <div class="grid-2">
+        <div>
+          <label>Dietary preference</label>
+          <select id="dietary_preference">
+            <option value="">Use profile default</option>
+            <option value="vegetarian">Vegetarian</option>
+            <option value="vegan">Vegan</option>
+            <option value="non_vegetarian">Non-Vegetarian</option>
+          </select>
+        </div>
+        <div>
+          <label>Goal</label>
+          <select id="goal">
+            <option value="">Use profile default</option>
+            <option value="balanced">General balanced eating</option>
+            <option value="weight_management">Weight-management (demo)</option>
+            <option value="fitness">Fitness-oriented (demo)</option>
+          </select>
+        </div>
+      </div>
+      <label>
+        <input type="checkbox" id="use_ai_api" style="width:auto; display:inline-block; margin-right:6px;">
+        Try external AI API first (falls back to rule-based engine automatically if unavailable)
+      </label>
+      <button type="submit">Generate Plan</button>
+    </form>
+    <div id="msg" class="msg" style="display:none;"></div>
+  </div>
+
+  <div class="card" id="resultCard" style="display:none;">
+    <h2>Your Generated Plan</h2>
+    <div id="planResult"></div>
+    <div class="disclaimer">This is a general, educational wellness example generated from demo data -- not medical or clinical nutrition advice.</div>
+    <a href="saved-plans.html"><button class="secondary">View Saved Plans</button></a>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+requireAuthOrRedirect();
+
+document.getElementById("genForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  try {
+    const body = { use_ai_api: document.getElementById("use_ai_api").checked };
+    const diet = document.getElementById("dietary_preference").value;
+    const goal = document.getElementById("goal").value;
+    if (diet) body.dietary_preference = diet;
+    if (goal) body.goal = goal;
+
+    const data = await apiRequest("/generate-plan", { method: "POST", body });
+    const plan = data.plan;
+    document.getElementById("planResult").innerHTML = `
+      <div class="meal-item"><span class="meal-label">Breakfast:</span> ${plan.breakfast}</div>
+      <div class="meal-item"><span class="meal-label">Lunch:</span> ${plan.lunch}</div>
+      <div class="meal-item"><span class="meal-label">Snack:</span> ${plan.snack}</div>
+      <div class="meal-item"><span class="meal-label">Dinner:</span> ${plan.dinner}</div>
+      <div class="meal-item"><span class="meal-label">Nutrition summary:</span> ${plan.nutrition_summary}</div>
+      <div class="meal-item"><span class="meal-label">Hydration:</span> ${plan.hydration_reminder}</div>
+      <div class="meal-item"><span class="meal-label">Source:</span> ${plan.source}</div>
+    `;
+    document.getElementById("resultCard").style.display = "block";
+  } catch (err) {
+    showMessage("msg", err.message, "error");
+  }
+});
+
+document.getElementById("logoutLink").addEventListener("click", (e) => {
+  e.preventDefault();
+  clearToken();
+  window.location.href = "login.html";
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+{
+  "breakfast": [
+    {"name": "Oatmeal with banana and nuts", "diet": ["vegetarian", "vegan"], "goal": ["balanced", "weight_management", "fitness"], "calories": 320},
+    {"name": "Vegetable poha with peanuts", "diet": ["vegetarian", "vegan"], "goal": ["balanced", "weight_management"], "calories": 280},
+    {"name": "Greek yogurt with berries and honey", "diet": ["vegetarian"], "goal": ["balanced", "fitness"], "calories": 300},
+    {"name": "Scrambled eggs with whole-grain toast", "diet": ["non_vegetarian", "vegetarian_with_eggs"], "goal": ["balanced", "fitness"], "calories": 350},
+    {"name": "Tofu and vegetable scramble", "diet": ["vegan", "vegetarian"], "goal": ["fitness", "weight_management"], "calories": 290},
+    {"name": "Smoothie: spinach, banana, almond milk, protein powder", "diet": ["vegan", "vegetarian", "non_vegetarian"], "goal": ["fitness", "weight_management"], "calories": 260}
+  ],
+  "lunch": [
+    {"name": "Grilled paneer with mixed vegetable salad", "diet": ["vegetarian"], "goal": ["balanced", "fitness"], "calories": 450},
+    {"name": "Chickpea and quinoa bowl", "diet": ["vegan", "vegetarian"], "goal": ["balanced", "weight_management"], "calories": 420},
+    {"name": "Grilled chicken breast with brown rice and greens", "diet": ["non_vegetarian"], "goal": ["fitness", "balanced"], "calories": 500},
+    {"name": "Lentil dal with steamed rice and cucumber salad", "diet": ["vegetarian", "vegan"], "goal": ["balanced", "weight_management"], "calories": 430},
+    {"name": "Grilled fish with roasted vegetables", "diet": ["non_vegetarian"], "goal": ["fitness", "weight_management"], "calories": 460},
+    {"name": "Vegetable stir-fry with tofu and brown rice", "diet": ["vegan", "vegetarian"], "goal": ["fitness"], "calories": 440}
+  ],
+  "snack": [
+    {"name": "A handful of mixed nuts", "diet": ["vegan", "vegetarian", "non_vegetarian"], "goal": ["balanced", "fitness"], "calories": 170},
+    {"name": "Sliced apple with peanut butter", "diet": ["vegan", "vegetarian", "non_vegetarian"], "goal": ["balanced", "weight_management"], "calories": 190},
+    {"name": "Roasted chickpeas", "diet": ["vegan", "vegetarian", "non_vegetarian"], "goal": ["weight_management", "fitness"], "calories": 150},
+    {"name": "Low-fat yogurt with a few berries", "diet": ["vegetarian"], "goal": ["weight_management", "fitness"], "calories": 140},
+    {"name": "Boiled egg", "diet": ["non_vegetarian", "vegetarian_with_eggs"], "goal": ["fitness"], "calories": 80}
+  ],
+  "dinner": [
+    {"name": "Vegetable soup with whole-grain bread", "diet": ["vegan", "vegetarian"], "goal": ["weight_management", "balanced"], "calories": 340},
+    {"name": "Grilled chicken with steamed broccoli", "diet": ["non_vegetarian"], "goal": ["fitness", "weight_management"], "calories": 400},
+    {"name": "Paneer and vegetable curry with one roti", "diet": ["vegetarian"], "goal": ["balanced"], "calories": 420},
+    {"name": "Moong dal khichdi with vegetables", "diet": ["vegetarian", "vegan"], "goal": ["balanced", "weight_management"], "calories": 380},
+    {"name": "Baked fish with sauteed spinach", "diet": ["non_vegetarian"], "goal": ["fitness"], "calories": 410},
+    {"name": "Stir-fried tofu with mixed vegetables", "diet": ["vegan", "vegetarian"], "goal": ["fitness", "weight_management"], "calories": 360}
+  ]
+}

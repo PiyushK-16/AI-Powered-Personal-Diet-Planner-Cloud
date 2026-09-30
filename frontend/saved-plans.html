@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Saved Plans</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav>
+  <span class="brand">🥗 Diet Planner Cloud</span>
+  <div>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="generate-plan.html">Generate Plan</a>
+    <a href="files.html">Cloud Files</a>
+    <a href="#" id="logoutLink">Logout</a>
+  </div>
+</nav>
+<div class="container">
+  <div class="card">
+    <h1>Saved Diet Plans</h1>
+    <div id="plansList">Loading...</div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+requireAuthOrRedirect();
+
+async function loadPlans() {
+  try {
+    const plans = await apiRequest("/plans");
+    const container = document.getElementById("plansList");
+    if (plans.length === 0) {
+      container.innerHTML = "<p>No saved plans yet. <a href='generate-plan.html'>Generate one</a>.</p>";
+      return;
+    }
+    container.innerHTML = plans.map(p => `
+      <div class="plan-list-item">
+        <div>
+          <strong>${new Date(p.created_at).toLocaleString()}</strong><br>
+          <span style="color:var(--muted); font-size:0.9rem;">${p.breakfast} • ${p.lunch} • ${p.snack} • ${p.dinner}</span>
+        </div>
+        <button class="danger" onclick="deletePlan(${p.plan_id})">Delete</button>
+      </div>
+    `).join("");
+  } catch (err) {
+    document.getElementById("plansList").innerHTML = `<div class="msg error">${err.message}</div>`;
+  }
+}
+
+async function deletePlan(id) {
+  try {
+    await apiRequest(`/plans/${id}`, { method: "DELETE" });
+    loadPlans();
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+loadPlans();
+
+document.getElementById("logoutLink").addEventListener("click", (e) => {
+  e.preventDefault();
+  clearToken();
+  window.location.href = "login.html";
+});
+</script>
+</body>
+</html>

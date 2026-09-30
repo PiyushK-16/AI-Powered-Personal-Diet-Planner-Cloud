@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cloud Files</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav>
+  <span class="brand">🥗 Diet Planner Cloud</span>
+  <div>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="generate-plan.html">Generate Plan</a>
+    <a href="saved-plans.html">Saved Plans</a>
+    <a href="#" id="logoutLink">Logout</a>
+  </div>
+</nav>
+<div class="container">
+  <div class="card">
+    <h1>Cloud Files</h1>
+    <p style="color:var(--muted); font-size:0.9rem;">Upload demo meal/food images or exported plan files to simulated cloud object storage.</p>
+    <form id="uploadForm">
+      <input type="file" id="fileInput" required>
+      <button type="submit">Upload to Cloud Storage</button>
+    </form>
+    <div id="msg" class="msg" style="display:none;"></div>
+  </div>
+
+  <div class="card">
+    <h2>Your Files</h2>
+    <div id="filesList">Loading...</div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+requireAuthOrRedirect();
+
+async function loadFiles() {
+  try {
+    const files = await apiRequest("/files");
+    const container = document.getElementById("filesList");
+    if (files.length === 0) {
+      container.innerHTML = "<p>No files uploaded yet.</p>";
+      return;
+    }
+    container.innerHTML = files.map(f => `
+      <div class="file-list-item">
+        <span>${f.filename} <span style="color:var(--muted); font-size:0.85rem;">(${new Date(f.uploaded_at).toLocaleString()})</span></span>
+        <button class="danger" onclick="deleteFile(${f.file_id})">Delete</button>
+      </div>
+    `).join("");
+  } catch (err) {
+    document.getElementById("filesList").innerHTML = `<div class="msg error">${err.message}</div>`;
+  }
+}
+
+async function deleteFile(id) {
+  try {
+    await apiRequest(`/files/${id}`, { method: "DELETE" });
+    loadFiles();
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const fileInput = document.getElementById("fileInput");
+  if (!fileInput.files.length) return;
+
+  const formData = new FormData();
+  formData.append("file", fileInput.files[0]);
+
+  try {
+    await apiRequest("/upload", { method: "POST", body: formData, isForm: true });
+    showMessage("msg", "File uploaded.", "success");
+    fileInput.value = "";
+    loadFiles();
+  } catch (err) {
+    showMessage("msg", err.message, "error");
+  }
+});
+
+loadFiles();
+
+document.getElementById("logoutLink").addEventListener("click", (e) => {
+  e.preventDefault();
+  clearToken();
+  window.location.href = "login.html";
+});
+</script>
+</body>
+</html>

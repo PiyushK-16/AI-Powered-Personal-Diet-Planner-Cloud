@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Profile - Diet Planner Cloud</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav>
+  <span class="brand">🥗 Diet Planner Cloud</span>
+  <div>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="generate-plan.html">Generate Plan</a>
+    <a href="saved-plans.html">Saved Plans</a>
+    <a href="files.html">Cloud Files</a>
+    <a href="#" id="logoutLink">Logout</a>
+  </div>
+</nav>
+<div class="container">
+  <div class="card">
+    <h1>Your Profile</h1>
+    <p style="color:var(--muted); font-size:0.9rem;">Demo/synthetic data only. Not used for medical purposes.</p>
+    <form id="profileForm">
+      <div class="grid-2">
+        <div>
+          <label>Age</label>
+          <input type="number" id="age" min="1" max="120">
+        </div>
+        <div>
+          <label>Activity level</label>
+          <select id="activity_level">
+            <option value="low">Low</option>
+            <option value="moderate">Moderate</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+        <div>
+          <label>Height (cm)</label>
+          <input type="number" id="height_cm" step="0.1">
+        </div>
+        <div>
+          <label>Weight (kg)</label>
+          <input type="number" id="weight_kg" step="0.1">
+        </div>
+        <div>
+          <label>Dietary preference</label>
+          <select id="dietary_preference">
+            <option value="vegetarian">Vegetarian</option>
+            <option value="vegan">Vegan</option>
+            <option value="non_vegetarian">Non-Vegetarian</option>
+          </select>
+        </div>
+        <div>
+          <label>Goal</label>
+          <select id="goal">
+            <option value="balanced">General balanced eating</option>
+            <option value="weight_management">Weight-management (demo)</option>
+            <option value="fitness">Fitness-oriented (demo)</option>
+          </select>
+        </div>
+      </div>
+      <label>Allergies / dislikes (comma-separated, optional)</label>
+      <input type="text" id="allergies" placeholder="e.g. peanuts, mushrooms">
+      <button type="submit">Save Profile</button>
+    </form>
+    <div id="msg" class="msg" style="display:none;"></div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+requireAuthOrRedirect();
+
+async function loadProfile() {
+  try {
+    const p = await apiRequest("/profile");
+    if (p.age) document.getElementById("age").value = p.age;
+    if (p.activity_level) document.getElementById("activity_level").value = p.activity_level;
+    if (p.height_cm) document.getElementById("height_cm").value = p.height_cm;
+    if (p.weight_kg) document.getElementById("weight_kg").value = p.weight_kg;
+    if (p.dietary_preference) document.getElementById("dietary_preference").value = p.dietary_preference;
+    if (p.goal) document.getElementById("goal").value = p.goal;
+    if (p.allergies) document.getElementById("allergies").value = p.allergies;
+  } catch (err) {
+    showMessage("msg", err.message, "error");
+  }
+}
+loadProfile();
+
+document.getElementById("profileForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  try {
+    await apiRequest("/profile", {
+      method: "PUT",
+      body: {
+        age: Number(document.getElementById("age").value) || null,
+        activity_level: document.getElementById("activity_level").value,
+        height_cm: Number(document.getElementById("height_cm").value) || null,
+        weight_kg: Number(document.getElementById("weight_kg").value) || null,
+        dietary_preference: document.getElementById("dietary_preference").value,
+        goal: document.getElementById("goal").value,
+        allergies: document.getElementById("allergies").value,
+      },
+    });
+    showMessage("msg", "Profile saved.", "success");
+  } catch (err) {
+    showMessage("msg", err.message, "error");
+  }
+});
+
+document.getElementById("logoutLink").addEventListener("click", (e) => {
+  e.preventDefault();
+  clearToken();
+  window.location.href = "login.html";
+});
+</script>
+</body>
+</html>

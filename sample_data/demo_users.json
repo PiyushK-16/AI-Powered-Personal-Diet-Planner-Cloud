@@ -1,0 +1,44 @@
+[
+  {
+    "name": "Demo Alice",
+    "email": "alice.demo@example.com",
+    "password": "password123",
+    "profile": {
+      "age": 24,
+      "height_cm": 165,
+      "weight_kg": 58,
+      "activity_level": "moderate",
+      "dietary_preference": "vegetarian",
+      "goal": "balanced",
+      "allergies": "peanuts"
+    }
+  },
+  {
+    "name": "Demo Ben",
+    "email": "ben.demo@example.com",
+    "password": "password123",
+    "profile": {
+      "age": 31,
+      "height_cm": 178,
+      "weight_kg": 82,
+      "activity_level": "high",
+      "dietary_preference": "non_vegetarian",
+      "goal": "fitness",
+      "allergies": ""
+    }
+  },
+  {
+    "name": "Demo Chloe",
+    "email": "chloe.demo@example.com",
+    "password": "password123",
+    "profile": {
+      "age": 27,
+      "height_cm": 160,
+      "weight_kg": 55,
+      "activity_level": "low",
+      "dietary_preference": "vegan",
+      "goal": "weight_management",
+      "allergies": "soy"
+    }
+  }
+]

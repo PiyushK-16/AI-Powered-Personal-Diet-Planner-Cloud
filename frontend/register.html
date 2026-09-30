@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register - Diet Planner Cloud</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav>
+  <span class="brand">🥗 Diet Planner Cloud</span>
+  <div><a href="login.html">Login</a></div>
+</nav>
+<div class="container">
+  <div class="card">
+    <h1>Create your account</h1>
+    <form id="registerForm">
+      <label>Full name</label>
+      <input type="text" id="name" required>
+      <label>Email</label>
+      <input type="email" id="email" required>
+      <label>Password (min 6 characters)</label>
+      <input type="password" id="password" required minlength="6">
+      <button type="submit">Register</button>
+    </form>
+    <div id="msg" class="msg" style="display:none;"></div>
+    <p style="margin-top:14px;">Already have an account? <a href="login.html">Login here</a></p>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+document.getElementById("registerForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  try {
+    await apiRequest("/register", {
+      method: "POST",
+      body: {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+      },
+    });
+    showMessage("msg", "Registration successful! Redirecting to login...", "success");
+    setTimeout(() => window.location.href = "login.html", 1200);
+  } catch (err) {
+    showMessage("msg", err.message, "error");
+  }
+});
+</script>
+</body>
+</html>
